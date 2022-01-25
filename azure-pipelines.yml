@@ -1,0 +1,30 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+  displayName: 'Use Python 3.6'
+
+# - script: |
+#     python3 -m pip install --upgrade pip
+
+#   displayName: 'Install dependencies'
+
+# - task: PipAuthenticate@1
+#   inputs:
+#     artifactFeeds: 'diff_feed'
+
+
+- script: |
+    python -m pip install Flask==2.0.2 https://username:token@pkgs.dev.azure.com/ImplementationKT/_packaging/diff_feed/pypi/simple
+  displayName: 'artifact-key'

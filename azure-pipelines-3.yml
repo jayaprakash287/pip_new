@@ -1,0 +1,37 @@
+
+
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: depend_group
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+  displayName: 'Use Python 3.6'
+
+- script: |
+    python -m pip install --upgrade pip
+    python -m pip install --upgrade $(dependencies)
+    python -m build
+  displayName: 'Building'
+
+- task: TwineAuthenticate@1
+  inputs:
+    artifactFeed: diff_feed
+
+- script: |
+   twine upload -r "diff_feed" --config-file $(PYPIRC_PATH) dist/*
+
+#Uploading distributions to https://pkgs.dev.azure.com/ImplementationKT/_packaging/diff_feed/pypi/upload
+
+#$(PYPIRC_PATH)=/home/vsts/work/_temp/twineAuthenticate/2Mg1Zp/.pypirc
+
+#Uploading distributions to https://pkgs.dev.azure.com/ImplementationKT/_packaging/diff_feed/pypi/upload
+
+#$(PYPIRC_PATH)=/home/vsts/work/_temp/twineAuthenticate/2Mg1Zp/.pypirc

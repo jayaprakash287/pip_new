@@ -1,0 +1,42 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+
+trigger:
+- none
+
+pool:
+  VmImage: ubuntu-latest
+
+variables:
+- group: depend_group
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+  displayName: 'Use Python 3.6'
+
+- script: |
+    python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade $(dependencies)
+    python3 -m build
+  displayName: 'Building'
+
+- task: TwineAuthenticate@1
+  inputs:
+    artifactFeed: diff_feed
+
+- script: |
+   twine upload -r "diff_feed" --config-file $(PYPIRC_PATH) dist/*
+
+
+#Uploading distributions to https://pkgs.dev.azure.com/ImplementationKT/_packaging/diff_feed/pypi/upload
+
+#$(PYPIRC_PATH)=/home/vsts/work/_temp/twineAuthenticate/2Mg1Zp/.pypirc
+
+#Uploading distributions to https://pkgs.dev.azure.com/ImplementationKT/_packaging/diff_feed/pypi/upload
+
+#$(PYPIRC_PATH)=/home/vsts/work/_temp/twineAuthenticate/2Mg1Zp/.pypirc

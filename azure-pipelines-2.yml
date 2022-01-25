@@ -1,0 +1,14 @@
+trigger:
+- none
+
+pool:
+  name: default
+
+variables:
+- group: depend_group
+
+steps:
+- script:
+    pip install sample-pack==0.0.1
+  displayName: 'to verify'
+  

@@ -1,0 +1,28 @@
+trigger:
+- none
+
+pool:
+  default
+
+variables:
+- group: depend_group
+
+steps:
+# - task: UsePythonVersion@0
+#   inputs:
+#     versionSpec: '3.6'
+#   displayName: 'Use Python 3.6'
+
+- script: |
+    python3 -m pip install sample-pack==1.0.3
+    python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade $(dependencies)
+    python3 -m build
+  displayName: 'Building'
+
+# - task: TwineAuthenticate@1
+#   inputs:
+#     artifactFeed: diff_feed
+
+# - script: |
+#    python3 -m twine upload -r "diff_feed" --config-file $(PYPIRC_PATH) dist/*
